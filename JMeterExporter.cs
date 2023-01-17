@@ -11,7 +11,7 @@ namespace JMeterExporterExtension
     [ProfferFormat("Cognizant JMeter", "Fiddler to JMeter .jmx Format")]
     public class JMeterExporter : ISessionExporter, IDisposable
     {
-        public bool ExportSessions(
+               public bool ExportSessions(
           string sFormat,
           Session[] oSessions,
           Dictionary<string, object> dictOptions,
@@ -28,15 +28,16 @@ namespace JMeterExporterExtension
             StreamWriter streamWriter = new StreamWriter(saveFilename, false, encoding);
             try
             {
-                streamWriter.Write(jmeterTestPlan.Jmx);
+                //streamWriter.Write(jmeterTestPlan.Jmx);
+                streamWriter.Write(jmeterTestPlan.Jmx.Replace("&lt;", "<").Replace("&gt;", ">"));
                 streamWriter.Close();
                 FiddlerApplication.Log.LogString("Successfully exported sessions to JMeter Test Plan");
                 FiddlerApplication.Log.LogString(string.Format("\t{0}", (object)saveFilename));
             }
             catch (Exception ex)
             {
-                //FiddlerApplication.Log.LogString(ex.Message);
-                //FiddlerApplication.Log.LogString(ex.StackTrace);
+                FiddlerApplication.Log.LogString(ex.Message);
+                FiddlerApplication.Log.LogString(ex.StackTrace);
                 flag = false;
                 streamWriter.Close();
             }
